@@ -1,6 +1,6 @@
 # Deep colorization
 
-Implementation of deep learning model in Keras for superresolution. Project uses U-Net trained with Perceptual loss instead of usual MAE or MSE. Work is still in progress.
+Implementation of deep learning model in Keras for superresolution. Work is still in progress.
 
 ---
 
@@ -8,7 +8,7 @@ Implementation of deep learning model in Keras for superresolution. Project uses
 
 Input image (left), predicted image (center), ground truth (right)
 
-![](resources/preview.png)
+![](resources/preview.jpg)
 
 ---
 

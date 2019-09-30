@@ -2,6 +2,7 @@ import os
 import argparse
 import numpy as np
 from comet_ml import Experiment
+import keras.backend as K
 from keras.callbacks import ModelCheckpoint, TerminateOnNaN
 from keras.optimizers import Adam
 from model import create_model
@@ -9,6 +10,20 @@ from losses.perceptual_loss import perceptual_loss
 from dataset import TrainDatasetSequence, TestDatasetSequence
 from callbacks.log_images import LogImages
 from utils import relative_path, file_listing
+
+
+def psnr_metric(max_pixel=1.0):
+    '''
+    Computes PSNR metric
+
+    Args:
+        max_pixel: Max value pixel can take on. We scale inputs to (0, 1
+
+    Note: 2.303 is natural and log10 conversion factor
+    '''
+    def psnr(y_true, y_pred):
+        return (10.0 * K.log((max_pixel ** 2) / (K.mean(K.square(y_pred - y_true), axis=-1)))) / 2.303
+    return psnr
 
 
 def train(model, args, experiment):
@@ -23,7 +38,7 @@ def train(model, args, experiment):
                                    scale=args.scale)
     model.compile(optimizer=Adam(lr=3e-4),
                   loss=perceptual_loss(output_shape),
-                  metrics=['mse'])
+                  metrics=['mse', psnr_metric()])
     model.summary()
 
     if args.weights:
