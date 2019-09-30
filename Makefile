@@ -20,9 +20,9 @@ train:
 		--validation-path=/storage/datasets/colorization-val/ \
 		--batch-size=32 \
 		--epochs=1 \
-		--input-w=64 \
-		--input-h=64 \
-		--scale=4 \
+		--input-w=128 \
+		--input-h=128 \
+		--scale=2 \
 		--model-save-path=/artifacts/
 
 test:

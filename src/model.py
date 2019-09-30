@@ -1,8 +1,17 @@
 import numpy as np
 import keras.backend as K
+import tensorflow as tf
 from keras.layers import *
 from keras.models import Model
 from layers.pixel_shuffle import PixelShuffle
+
+
+def BilinearUpSampling2D(stride, **kwargs):
+    def layer(x):
+        input_shape = K.int_shape(x)
+        output_shape = (stride[0] * input_shape[1], stride[1] * input_shape[2])
+        return tf.image.resize_bilinear(x, output_shape, align_corners=True)
+    return Lambda(layer, **kwargs)
 
 
 def conv_block(x, filters=64, batch_norm=False):
@@ -14,7 +23,7 @@ def conv_block(x, filters=64, batch_norm=False):
 
 
 def up_block(x, y, filters=64, batch_norm=False):
-    x = UpSampling2D((2, 2))(x)
+    x = BilinearUpSampling2D((2, 2))(x)
     x = Conv2D(512, (3, 3), padding='same')(x)
     if batch_norm:
         x = BatchNormalization()(x)
@@ -30,6 +39,11 @@ def up_block(x, y, filters=64, batch_norm=False):
 
 
 def create_model(input_shape=(64, 64, 3), scale_factor=3):
+    '''
+    U-Net based architecture with skip connections and bilinear interpolation upsampling.
+    PixelShuffle is added as a final upsampling layer to enlarge to SR.
+    '''
+
     img_input = Input(shape=input_shape)
 
     # Encoder
@@ -52,12 +66,12 @@ def create_model(input_shape=(64, 64, 3), scale_factor=3):
     enc5 = conv_block(down, 1024)
     enc5 = conv_block(enc5, 1024)
 
-    # Fusion
-    fus = Conv2D(256, (1, 1))(enc5)
-    fus = ReLU()(fus)
+    # Center
+    cent = Conv2D(256, (1, 1))(enc5)
+    cent = ReLU()(cent)
 
     # Decoder
-    dec = up_block(fus, enc4, 512)
+    dec = up_block(cent, enc4, 512)
     dec = up_block(dec, enc3, 256)
     dec = up_block(dec, enc2, 128)
     dec = up_block(dec, enc1, 64)

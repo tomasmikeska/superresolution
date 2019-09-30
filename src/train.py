@@ -5,12 +5,14 @@ from comet_ml import Experiment
 from keras.callbacks import ModelCheckpoint, TerminateOnNaN
 from keras.optimizers import Adam
 from model import create_model
+from losses.perceptual_loss import perceptual_loss
 from dataset import TrainDatasetSequence, TestDatasetSequence
 from callbacks.log_images import LogImages
 from utils import relative_path, file_listing
 
 
 def train(model, args, experiment):
+    output_shape = (args.input_h * args.scale, args.input_w * args.scale, 3)
     train_seq = TrainDatasetSequence(args.train_dataset,
                                      batch_size=args.batch_size,
                                      input_size=(args.input_w, args.input_h),
@@ -20,7 +22,8 @@ def train(model, args, experiment):
                                    input_size=(args.input_w, args.input_h),
                                    scale=args.scale)
     model.compile(optimizer=Adam(lr=3e-4),
-                  loss='mse')
+                  loss=perceptual_loss(output_shape),
+                  metrics=['mse'])
     model.summary()
 
     if args.weights:
@@ -37,7 +40,7 @@ def train(model, args, experiment):
             paths=file_listing(args.validation_path),
             input_size=(args.input_w, args.input_h),
             scale=args.scale,
-            log_iters=3000)
+            log_iters=500)
     ]
 
     model.fit_generator(
