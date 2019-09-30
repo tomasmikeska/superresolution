@@ -1,12 +1,12 @@
 # Deep colorization
 
-Implementation of deep learning model in Keras for superresolution. Work is still in progress.
+Implementation of deep learning model in Keras for superresolution. Model is still in experimental phase but seems to perform better than reference ESPCN implementation.
 
 ---
 
 ### Examples
 
-Input image (left), predicted image (center), ground truth (right)
+Input image (left), predicted image (center), ground truth (right). Results after <2h of training on NVIDIA Quadro P5000 with 128x128 input size with 2x upscale factor.
 
 ![](resources/preview.jpg)
 
