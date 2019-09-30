@@ -49,12 +49,6 @@ Train model using command
 $ python src/train.py
 ```
 
-### References
-
-1. J. Johnson, A. Alahi, Li Fei-Fei: Perceptual Losses for Real-Time Style Transfer and Super-Resolution, [link](https://arxiv.org/abs/1603.08155)
-2. W. Shi, J. Caballero, F. Husza ́r, J. Totz, A. P. Aitken, R. Bishop, D. Rueckert, Z. Wang: Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network, [link](https://arxiv.org/abs/1609.05158)
-3. fast.ai MOOC ideas on SR, [fast.ai](https://www.fast.ai/)
-
 ### License
 
 Code is released under the MIT License. Please see the LICENSE file for details.
