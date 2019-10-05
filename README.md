@@ -1,6 +1,6 @@
 # Superresolution
 
-Implementation of deep learning model in Keras for superresolution. Model is still in experimental phase but seems to perform better than reference ESPCN implementation.
+Implementation of deep learning model in Keras for superresolution. Model is still in experimental phase (current results below).
 
 ---
 
